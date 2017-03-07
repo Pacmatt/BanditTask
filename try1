@@ -1,0 +1,50 @@
+import numpy as np
+
+
+class Exobasile(object):
+
+    def __init__(self):
+        self.nb_machine = 100
+        self.p = np.zeros(self.nb_machine)
+        self.explore = 0.3
+        self.value = np.zeros(self.nb_machine)
+        self.alpha = 0.5
+
+        for idx in range(len(self.p)):
+            self.p[idx] = np.random.random()
+
+    def choice(self):
+        if np.random.random() < self.explore:
+           return np.random.randint(self.nb_machine)
+        else:
+            return np.argmax(self.value)
+
+    def play(self, idx):
+        if np.random.random() < self.p[idx]:
+            return 1
+        else:
+            return 0
+
+    def learn(self, idx, reward):
+        self.value[idx] += self.alpha * (reward - self.value[idx])
+
+
+def main():
+    game = Exobasile()
+    i = 0
+    while True:
+        i += 1
+        idx = game.choice()
+        reward = game.play(idx)
+        game.learn(idx, reward)
+        cond1 = np.argmax(game.value) == np.argmax(game.p)
+        cond2 = i >= 500
+        print("la proba la plus haute : {}".format(np.argmax(game.p)))
+        print("la valeur la plus haute : {}".format(np.argmax(game.value)))
+        print("iteration : ", i)
+        if cond1  and cond2 and len(game.p) == len(np.nonzero(game.value)[0]):
+            print(game.p, "\n", game.value)
+            break
+
+if __name__ == '__main__':
+    main()
