@@ -1,3 +1,5 @@
+#bandit task exercise
+
 import numpy as np
 
 
